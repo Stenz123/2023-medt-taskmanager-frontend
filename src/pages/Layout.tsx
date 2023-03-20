@@ -7,7 +7,7 @@ type LayoutProps = {
 
 const Layout = ({children}:LayoutProps) => {
   return (
-    <div className='layout min-h-screen'>
+    <div className='layout h-screen'>
         <Header></Header>
         {children}
     </div>

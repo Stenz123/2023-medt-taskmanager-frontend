@@ -3,8 +3,8 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Boards', href: '#', current: false },
+  { name: 'Dashboard', href: '/', current: true },
+  { name: 'Boards', href: 'boards', current: false },
 ]
 
 //...classes may cause problems, idk what it does
@@ -14,7 +14,7 @@ function classNames(...classes: string[]) {
 
 export default function Example() {
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className="bg-gray-800 z-0">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
