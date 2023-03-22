@@ -7,7 +7,7 @@ type LayoutProps = {
 
 const Layout = ({children}:LayoutProps) => {
   return (
-    <div className='layout h-screen'>
+    <div className='layout h-screen dark:bg-gray-900'>
         <Header></Header>
         {children}
     </div>

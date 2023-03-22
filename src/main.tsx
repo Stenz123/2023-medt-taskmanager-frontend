@@ -4,15 +4,16 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Error404 from "./pages/Error404"
 import Layout from "./pages/Layout";
 import "./index.css";
+import BoardTable from "./components/boardTable/BoardTable";
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
       <Layout>
         <Routes>
-          <Route path="/" element={<h1>Home</h1>} />
-          <Route path="/boards" element={<h1>This is the board overview page</h1>} />
-          <Route path="/board" element={<h1>This is the board page</h1>} />
+          <Route path="/" element={<h1 className="text-white">Home</h1>} />
+          <Route path="/boards" element={<BoardTable />} />
+          <Route path="/board" element={<h1 className="text-white">This is the board page</h1>} />
           <Route path="/*" element={<Error404 />} />
         </Routes>
       </Layout>
