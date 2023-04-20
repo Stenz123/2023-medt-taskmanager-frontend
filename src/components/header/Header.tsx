@@ -1,8 +1,13 @@
-import { Fragment } from 'react'
+import React, {Fragment, useEffect} from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import IconDropdown from '../IconDropdown'
 import { NavLink, useLocation } from 'react-router-dom'
+import {UserServices} from "../../services/user.services";
+import {UserModel} from "../../models/user.model";
+import {LoginService} from "../../services/login.service";
+import Login from "../Login";
+
 
 const navigation = [
   //WITH SLASHES!!!
@@ -16,11 +21,35 @@ function classNames(...classes: string[]) {
 }
 
 export default function Example() {
+
+  const [user, setUser] = React.useState<UserModel>(new UserModel());
+
+  useEffect(() => {
+    const loginButton = document.getElementById('signInButton');
+    loginButton?.addEventListener('click', () => {
+      setOpen(true);
+    });
+  }, [document.getElementById('signInButton')]);
+
+  useEffect(() => {
+    isLogged();
+  },[]);
+  async function isLogged() {
+    let user : UserModel | false = await UserServices.getUser();
+    if (user) {
+      setUser(user);
+    }else {
+      setUser(new UserModel());
+    }
+  }
+
+  const [isOpen, setOpen] = React.useState(false);
+
   return (
     <Disclosure as="nav" className="bg-gray-800 z-0">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="mx-2auto max-w-full px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
@@ -35,31 +64,17 @@ export default function Example() {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <a href='/'>
-                  <img
-                    className="block h-8 w-auto lg:hidden"
-                    src='/Logo.svg'
-                    alt="Your Company"
-                  />
-                  
-                  <img
-                    className="hidden h-8 w-auto lg:block"
-                    src='/Logo.svg'
-                    alt="Your Company"
-                  />
-                  </a>
+                  <NavLink to='/'>
+                    <img className="block h-8 w-auto" src='/Logo.svg' alt="logo"/>
+                  </NavLink>
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <NavLink
-                        key={item.name}
-                        to={item.href}
+                      <NavLink key={item.name}
                         className={classNames(
                           item.href === useLocation().pathname ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium'
-                        )}
-                      >
+                          'rounded-md px-3 py-2 text-sm font-medium')} to={item.href}>
                         {item.name}
                       </NavLink>
                     ))}
@@ -69,58 +84,20 @@ export default function Example() {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
                   type="button"
-                  className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                >
-                  
+                  className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 </button>
-
-                {/* Profile dropdown */}
-                <Menu as="div" className="relative ml-3">
-                  <IconDropdown></IconDropdown>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Your Profile
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Settings
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Sign out
-                          </a>
-                        )}
-                      </Menu.Item>
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
               </div>
+                {
+                    user.getId() !== -1 ? <><p className="text-white p-5" id="logoutButton"> {user.getName()}</p>
+                          <button onClick={LoginService.logout} className="text-red-600">Logout</button>
+                        </> :
+                        <button className="rounded-md px-3 py-2 text-sm font-medium bg-blue-500 text-white
+                                        inline-flex justify-center
+                                        border border-transparent shadow-sm hover:bg-blue-400
+                                        focus:outline-none focus:ring-2 focus:ring-offset-2
+                                        focus:ring-blue-500 sm:w-auto sm:text-sm" id="signInButton">Sign In</button>
+                }
+
             </div>
           </div>
           <Disclosure.Panel className="sm:hidden relative">
@@ -139,6 +116,7 @@ export default function Example() {
               ))}
             </div>
           </Disclosure.Panel>
+          <Login open={isOpen} setOpen={setOpen}></Login>
         </>
       )}
     </Disclosure>
