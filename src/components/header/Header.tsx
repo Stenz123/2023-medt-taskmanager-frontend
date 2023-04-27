@@ -1,10 +1,7 @@
-import React, {Fragment, useEffect} from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
+import React, { useEffect} from 'react'
+import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import IconDropdown from '../IconDropdown'
 import { NavLink, useLocation } from 'react-router-dom'
-import {UserServices} from "../../services/user.services";
-import {UserModel} from "../../models/user.model";
 import {LoginService} from "../../services/login.service";
 import Login from "../Login";
 
@@ -20,9 +17,14 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function Header() {
 
-  const [user, setUser] = React.useState<UserModel>(new UserModel());
+  const [isLogged, setIsLogged] = React.useState(false);
+  useEffect(() => {
+    if (LoginService.getUser()!=null) {
+      setIsLogged(true);
+    }
+  }, [LoginService.getUser()]);
 
   useEffect(() => {
     const loginButton = document.getElementById('signInButton');
@@ -31,16 +33,9 @@ export default function Example() {
     });
   }, [document.getElementById('signInButton')]);
 
-  useEffect(() => {
-    isLogged();
-  },[]);
-  async function isLogged() {
-    let user : UserModel | false = await UserServices.getUser();
-    if (user) {
-      setUser(user);
-    }else {
-      setUser(new UserModel());
-    }
+  function logout(){
+    LoginService.logout();
+    setIsLogged(false)
   }
 
   const [isOpen, setOpen] = React.useState(false);
@@ -61,7 +56,7 @@ export default function Example() {
                     <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                   )}
                 </Disclosure.Button>
-              </div>
+                </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
                   <NavLink to='/'>
@@ -88,8 +83,8 @@ export default function Example() {
                 </button>
               </div>
                 {
-                    user.getId() !== -1 ? <><p className="text-white p-5" id="logoutButton"> {user.getName()}</p>
-                          <button onClick={LoginService.logout} className="text-red-600">Logout</button>
+                    isLogged ? <><p className="text-white p-5" id="logoutButton"> {LoginService.getUser()?.getName()}</p>
+                          <button onClick={logout} className="text-red-600">Logout</button>
                         </> :
                         <button className="rounded-md px-3 py-2 text-sm font-medium bg-blue-500 text-white
                                         inline-flex justify-center

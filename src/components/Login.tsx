@@ -10,7 +10,7 @@ type Props = {
 export default function Login({open, setOpen}: Props) {
     const cancelButtonRef = React.useRef(null);
 
-    const [register, setRegister] = useState(true);
+    const [register, setRegister] = useState(false);
 
     const [email, setEmail] = useState('');
     const [isValidEmail, setIsValidEmail] = useState(false);
@@ -58,7 +58,7 @@ export default function Login({open, setOpen}: Props) {
 
     useEffect(() => {
         if (register){
-            setIsValidPassword(password.length > 8);
+            setIsValidPassword(password.length >= 8);
         }else {
             setIsValidPassword(password.length > 0);
         }
@@ -197,7 +197,7 @@ export default function Login({open, setOpen}: Props) {
                                         disabled={!isFormFilled}>
                                         {!register ? "Log in" : "Register"}
                                     </button>
-                                    <p className="text-white text-sm mb-4">Don't have an account? <button onClick={changeForm} className="text-blue-500">{!register ? "Log in" : "Register"}</button></p>
+                                    <p className="text-white text-sm mb-4">Don't have an account? <button onClick={changeForm} className="text-blue-500">{register ? "Log in" : "Register"}</button></p>
                                 </form>
                             </div>
                         </div>

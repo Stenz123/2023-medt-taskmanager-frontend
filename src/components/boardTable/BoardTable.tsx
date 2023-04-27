@@ -1,31 +1,20 @@
 import Icon from "../Icon"
-import { Menu } from '@headlessui/react';
-
+import {useEffect, useState} from "react";
+import {BoardServices} from "../../services/board.services";
+import {BoardModel} from "../../models/board.model";
 
 export default () => {
 
-    const tableItems = [
-        {
-            name: "MEDT-Board",
-            team: "liamjames@example.com",
-            length: 2,
-        },
-        {
-            name: "My Team",
-            team: "oliviaemma@example.com",
-            length: 15,
-        },
-        {
-            name: "William Benjamin",
-            team: "william.benjamin@example.com",
-            length: 25,
-        },
-        {
-            name: "Henry Theodore",
-            email: "henrytheodore@example.com",
-            length: 10,
-        },
-    ]
+    const [tableItems, setTableItems] = useState([new BoardModel(-1, "noBoard", -1, -1,[])]);
+
+
+    useEffect(() => {
+        getMyBoards()
+    }, []);
+    async function getMyBoards() {
+        const response = await BoardServices.getUserBoards();
+        setTableItems(response);
+    }
 
     return (
         <div className="max-w-screen-xl mx-auto px-4 md:px-8">
@@ -41,11 +30,11 @@ export default () => {
                     </thead>
                     <tbody className="text-white divide-y divide-gray-500">
                         {
-                            tableItems.map((item, idx) => (
+                            tableItems.map((item:BoardModel, idx) => (
                                 <tr key={idx} className= {`hover:bg-gray-500 ${idx % 2 === 0 ? "bg-gray-700" : "bg-gray-800"}`}>
-                                    <td className="px-6 py-4 whitespace-nowrap">{item.name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap flex items-center"><Icon src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'/>{item.team}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{item.length}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">{item.title}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap flex items-center">{item.users.map(user => user.getName())}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">{item.sprintLength}</td>
                                     <td className="text-red-600">delete</td>
                                 </tr>
                             ))
