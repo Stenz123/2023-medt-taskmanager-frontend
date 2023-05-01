@@ -3,7 +3,8 @@ import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { NavLink, useLocation } from 'react-router-dom'
 import {LoginService} from "../../services/login.service";
-import Login from "../Login";
+import Login from "../popup/Login";
+import {UserContext} from "../../context/usercontext";
 
 
 const navigation = [
@@ -19,23 +20,13 @@ function classNames(...classes: string[]) {
 
 export default function Header() {
 
-  const [isLogged, setIsLogged] = React.useState(false);
-  useEffect(() => {
-    if (LoginService.getUser()!=null) {
-      setIsLogged(true);
-    }
-  }, [LoginService.getUser()]);
 
-  useEffect(() => {
-    const loginButton = document.getElementById('signInButton');
-    loginButton?.addEventListener('click', () => {
-      setOpen(true);
-    });
-  }, [document.getElementById('signInButton')]);
+  function setOpened(){
+    setOpen(true);
+  }
 
   function logout(){
     LoginService.logout();
-    setIsLogged(false)
   }
 
   const [isOpen, setOpen] = React.useState(false);
@@ -82,17 +73,20 @@ export default function Header() {
                   className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 </button>
               </div>
-                {
-                    isLogged ? <><p className="text-white p-5" id="logoutButton"> {LoginService.getUser()?.getName()}</p>
+              <UserContext.Consumer>
+                {context =>
+                    context.user!=null ? <><p className="text-white p-5" id="logoutButton"> {context.user.getName()}</p>
                           <button onClick={logout} className="text-red-600">Logout</button>
                         </> :
-                        <button className="rounded-md px-3 py-2 text-sm font-medium bg-blue-500 text-white
+                        <button onClick={function (){
+                            setOpened();
+                        }} className="rounded-md px-3 py-2 text-sm font-medium bg-blue-500 text-white
                                         inline-flex justify-center
                                         border border-transparent shadow-sm hover:bg-blue-400
                                         focus:outline-none focus:ring-2 focus:ring-offset-2
-                                        focus:ring-blue-500 sm:w-auto sm:text-sm" id="signInButton">Sign In</button>
+                                        focus:ring-blue-500 sm:w-auto sm:text-sm">Sign In</button>
                 }
-
+              </UserContext.Consumer>
             </div>
           </div>
           <Disclosure.Panel className="sm:hidden relative">

@@ -30,4 +30,35 @@ export class BoardServices {
         }
         return result;
     }
+
+    public static async createBoard(title:string, sprintLength:number): Promise<BoardModel> {
+        console.log(title, sprintLength)
+        console.log(JSON.stringify({
+            title: title,
+            sprintlen: sprintLength
+        }))
+
+        let response = await fetch("/api/board/createBoard.php", {
+            method: "POST",
+            body: JSON.stringify({
+                title: title,
+                sprintlen: sprintLength
+            })
+        });
+        let boardJson = await response.json();
+        console.log(boardJson)
+        return new BoardModel(
+            boardJson.data.B_ID,
+            boardJson.data.B_TITLE,
+            boardJson.data.B_OWNER,
+            boardJson.data.B_SPRINTLEN,
+            boardJson.data.B_USERS
+        );
+    }
+
+    static async deleteBoard(id: number) {
+        let responese = await fetch(`/api/board/deleteBoard.php?id=${id}`, {
+            method: "DELETE",
+        })
+    }
 }

@@ -1,15 +1,9 @@
 import {UserModel} from "../models/user.model";
 import {UserServices} from "./user.services";
+import {UserSubject} from "./user.subject";
 
 export class LoginService {
 
-    private static user:UserModel|null = null;
-    public static getUser():UserModel|null {
-        return this.user;
-    }
-    private static setUser(user:null|UserModel):void{
-        LoginService.user=user;
-    }
     public static async login(email: string, password: string): Promise<boolean> {
         const response = await fetch("/api/auth/login.php", {
             method: "POST",
@@ -22,7 +16,7 @@ export class LoginService {
             if(await UserServices.getUser()){
                 let user:UserModel|false = await UserServices.getUser();
                 if (user) {
-                    this.user = user;
+                    UserSubject.getInstance().setUser(user);
                 }
             }
         }
@@ -33,9 +27,10 @@ export class LoginService {
         const response = await fetch("/api/auth/logout.php", {
             method: "POST"
         });
-        const json = await response.json();
+        const json = await response.json()
+
         if (json["success"] == true){
-            LoginService.setUser(null);
+            UserSubject.getInstance().setUser(null);
         }
         return json["success"];
     }
@@ -58,10 +53,10 @@ export class LoginService {
         response = await fetch("/api/auth/isLoggedIn.php");
         const json = await response.json();
         if (json.success) {
-            if(this.user==null){
+            if(UserSubject.getInstance().getUser()==null){
                 let user:UserModel|false = await UserServices.getUser();
                 if (user) {
-                    this.user = user;
+                    UserSubject.getInstance().setUser(user);
                 }
             }
         }

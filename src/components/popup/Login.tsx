@@ -1,5 +1,5 @@
 import React, {Fragment, useEffect, useState} from "react";
-import {LoginService} from "../services/login.service";
+import {LoginService} from "../../services/login.service";
 import {Dialog, Transition} from "@headlessui/react";
 import {NavLink} from "react-router-dom";
 
