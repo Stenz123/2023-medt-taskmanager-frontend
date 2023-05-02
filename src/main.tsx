@@ -6,6 +6,8 @@ import Layout from "./pages/Layout";
 import "./index.css";
 import BoardTable from "./pages/BoardTable";
 import Home from "./pages/Home";
+import {Board} from "./pages/Board";
+
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -14,7 +16,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <Routes>
           <Route path="/" element={<Home/>} />
           <Route path="/boards" element={<BoardTable />} />
-          <Route path="/board" element={<h1 className="text-white">This is the board page</h1>} />
+          <Route path="/board/*" element={<Board></Board>}/>
           <Route path="/*" element={<Error404 />} />
         </Routes>
       </Layout>

@@ -20,7 +20,6 @@ export class UserSubject {
     }
 
     public getUser():UserModel|null {
-        console.log(this.user)
         return this.user;
     }
 
@@ -36,11 +35,9 @@ export class UserSubject {
 
     public subscribe(observer:Function):void {
         this.observers.push(observer);
-        console.log(this.observers)
     }
 
     public unsubscribe(observer:Function):void {
         this.observers = this.observers.filter(subscriber => subscriber !== observer);
-        console.log(this.observers)
     }
 }

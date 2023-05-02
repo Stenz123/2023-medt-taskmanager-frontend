@@ -6,7 +6,7 @@ import ConfirmDelete from "../components/popup/ConfirmDelete";
 import {LoginService} from "../services/login.service";
 import {UserProvider} from "../context/userProvider";
 import {UserContext} from "../context/usercontext";
-import {Navigate, NavLink} from "react-router-dom";
+import {Navigate, NavLink, redirect, useNavigate} from "react-router-dom";
 import {UserSubject} from "../services/user.subject";
 
 export default () => {
@@ -24,6 +24,17 @@ export default () => {
         }
     },[])
 
+    useEffect(() => {
+        if (!isOpen){
+            getMyBoards()
+        }
+    }, [isOpen])
+
+    useEffect(() => {
+        if (!isDeleteOpen){
+            getMyBoards()
+        }
+    }, [isDeleteOpen])
 
     async function getMyBoards() {
         const response = await BoardServices.getUserBoards();
@@ -40,6 +51,12 @@ export default () => {
     function deleteBoard(id: number) {
         setDeleteId(id)
         setIsDeleteOpen(true)
+    }
+
+    const navigate = useNavigate();
+
+    const redirectBoard = (id:number) => {
+        navigate("/board/"+id)
     }
 
     return (
@@ -70,12 +87,17 @@ export default () => {
                         <tbody className="text-white divide-y divide-gray-500" id="existId">
                         {
                             tableItems.map((item: BoardModel, idx) => (
-                                <tr key={idx}
+
+                                <tr key={idx} onClick={() => {
+                                    console.log(item.id)
+                                    //redirect to board
+                                    redirectBoard(item.id)
+                                }}
                                     className={`hover:bg-gray-500 ${idx % 2 === 0 ? "bg-gray-700" : "bg-gray-800"}`}>
                                         <td className="px-6 py-4 whitespace-nowrap">{item.title}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap flex items-center">{item.users.map(user => user.getName())}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap flex items-center">{item.users.map(user => user.getName()+" ")}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{item.sprintLength}</td>
-                                        {item.owner==user.getId() ? <td className="text-red-600" onClick={()=>{deleteBoard(item.id)}}>delete</td>:<td></td>}
+                                        {item.owner===user.getId() ? <td className="text-red-600" onClick={function (){deleteBoard(item.id)}}>delete</td>:<td></td>}
                                 </tr>
                             ))
                         }

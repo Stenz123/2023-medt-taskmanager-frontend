@@ -13,8 +13,9 @@ export default function ConfirmDelete({deleteId ,open, setOpen}: Props) {
     const cancelButtonRef = React.useRef(null);
     function deleteBoard() {
         console.log("delete board "+deleteId)
-        BoardServices.deleteBoard(deleteId)
-        setOpen(false)
+        BoardServices.deleteBoard(deleteId).then(()=>{
+            setOpen(false)
+        })
     }
 
     return (

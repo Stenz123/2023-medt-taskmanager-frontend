@@ -22,9 +22,8 @@ export default function CreateBoard({open, setOpen}: Props) {
         e.preventDefault();
         if (validName) {
             BoardServices.createBoard(name, length).then(() => {
-                BoardServices.getUserBoards();
+                setOpen(false);
             });
-            setOpen(false);
         } else {
             setError("Please enter a name for your board");
         }
