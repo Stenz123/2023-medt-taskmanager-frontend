@@ -3,17 +3,16 @@ import React, {useEffect, useState} from "react";
 import {Board as BoardType} from "../models/Board";
 import Task from "../models/Task";
 import Column from "../components/Column";
+import {TaskServices} from "../services/task.services";
 
 export const Board = () => {
-    const task = new Task(1, "Task 1", "This is task 1", 1);
-    const testTasks: Task[] = [task, task, task];
-    const testColumns = {
-        name: "Test",
-        tasks: testTasks
-    }
 
     const [id, setId] = useState<number>(-1);
     const [board, setBoard] = useState<BoardType|undefined>();
+
+    const [tasks0, setTasks0] = useState<Task[]>([]);
+    const [tasks1, setTasks1] = useState<Task[]>([]);
+    const [tasks2, setTasks2] = useState<Task[]>([]);
 
     const navigate = useNavigate();
 
@@ -30,13 +29,43 @@ export const Board = () => {
         setId(params)
     }, []);
 
+    useEffect(() => {
+        getTasks(23).then(r => console.log(r))
+    },[])
+
+    async function getTasks(id:number){
+        const response = await TaskServices.getTasks(id);
+        let task0:Task[] = []
+        let task1:Task[] = []
+        let task2:Task[] = []
+
+        console.log(response)
+
+        response.forEach((task) => {
+            if (task.getColumn() === 0){
+                task0.push(task)
+            } else if (task.getBoardId() === 1){
+                task1.push(task)
+            } else if (task.getColumn() === 2){
+                task2.push(task)
+            }
+        })
+
+        setTasks0(task0)
+        setTasks1(task1)
+        setTasks2(task2)
+
+        console.log(tasks0)
+        console.log(tasks1)
+        console.log(tasks2)
+    }
 
     return (
         <>
             <div className="grid grid-cols-3 h-full p-5 pt-0">
-                <Column name={testColumns.name} tasks={testColumns.tasks}/>
-                <Column name={testColumns.name} tasks={testColumns.tasks}/>
-                <Column name={testColumns.name} tasks={testColumns.tasks}/>
+                <Column name={"not begun"} tasks={tasks0}/>
+                <Column name={"in progress"} tasks={tasks1}/>
+                <Column name={"finished"} tasks={tasks2}/>
             </div>
         </>
     );

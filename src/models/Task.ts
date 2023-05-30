@@ -3,12 +3,14 @@ export default class Task{
     private title: string;
     private description: string;
     private column: number;
+    private boardId: number;
 
-    constructor(id:number, title:string, description:string, column:number) {
+    constructor(id:number, title:string, description:string, column:number, boardId:number) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.column = column;
+        this.boardId = boardId;
     }
 
     public getId(): number {
@@ -25,5 +27,9 @@ export default class Task{
 
     public getColumn(): number {
         return this.column;
+    }
+
+    public getBoardId(): number {
+        return this.boardId;
     }
 }
