@@ -1,14 +1,19 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
-import {BoardModel} from "../models/board.model";
-import boardTable from "./BoardTable";
-import {BoardServices} from "../services/board.services";
+import React, {useEffect, useState} from "react";
+import {Board as BoardType} from "../models/Board";
+import Task from "../models/Task";
+import Column from "../components/Column";
 
 export const Board = () => {
-    //get last part of url
+    const task = new Task(1, "Task 1", "This is task 1", 1);
+    const testTasks: Task[] = [task, task, task];
+    const testColumns = {
+        name: "Test",
+        tasks: testTasks
+    }
 
     const [id, setId] = useState<number>(-1);
-    const [board, setBoard] = useState<BoardModel|undefined>();
+    const [board, setBoard] = useState<BoardType|undefined>();
 
     const navigate = useNavigate();
 
@@ -28,8 +33,11 @@ export const Board = () => {
 
     return (
         <>
-            <h1>Board</h1>
-            <h2>{id}</h2>
-    </>
+            <div className="grid grid-cols-3 h-full p-5 pt-0">
+                <Column name={testColumns.name} tasks={testColumns.tasks}/>
+                <Column name={testColumns.name} tasks={testColumns.tasks}/>
+                <Column name={testColumns.name} tasks={testColumns.tasks}/>
+            </div>
+        </>
     );
 };

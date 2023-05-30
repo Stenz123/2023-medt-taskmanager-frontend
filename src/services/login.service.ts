@@ -1,4 +1,4 @@
-import {UserModel} from "../models/user.model";
+import {User} from "../models/User";
 import {UserServices} from "./user.services";
 import {UserSubject} from "./user.subject";
 
@@ -14,7 +14,7 @@ export class LoginService {
         });
         if (response.ok) {
             if(await UserServices.getUser()){
-                let user:UserModel|false = await UserServices.getUser();
+                let user:User|false = await UserServices.getUser();
                 if (user) {
                     UserSubject.getInstance().setUser(user);
                 }
@@ -54,7 +54,7 @@ export class LoginService {
         const json = await response.json();
         if (json.success) {
             if(UserSubject.getInstance().getUser()==null){
-                let user:UserModel|false = await UserServices.getUser();
+                let user:User|false = await UserServices.getUser();
                 if (user) {
                     UserSubject.getInstance().setUser(user);
                 }

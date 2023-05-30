@@ -1,15 +1,15 @@
-import {UserModel} from "../models/user.model";
+import {User} from "../models/User";
 import {LoginService} from "../services/login.service";
 
 export class UserServices {
 
-    public static async getUser(): Promise<Promise<UserModel> | false> {
+    public static async getUser(): Promise<Promise<User> | false> {
         let response = await fetch("/api/user/get.php");
         let userJson = await response.json();
         if (userJson.success == false) {
             return false;
         }
-        let userObject = new UserModel(userJson.data[0].user_id, userJson.data[0].username, userJson.data[0].email, userJson.data[0].password)
+        let userObject = new User(userJson.data[0].user_id, userJson.data[0].username, userJson.data[0].email, userJson.data[0].password)
         return userObject;
     }
 

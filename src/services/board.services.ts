@@ -1,16 +1,16 @@
-import {BoardModel} from "../models/board.model";
-import {UserModel} from "../models/user.model";
+import {Board} from "../models/Board";
+import {User} from "../models/User";
 
 export class BoardServices {
 
-    public static async getUserBoards(): Promise<BoardModel[]> {
+    public static async getUserBoards(): Promise<Board[]> {
         let response = await fetch("/api/board/getUserBoards.php");
         let boardJson = await response.json();
-        let result: BoardModel[] = [];
+        let result: Board[] = [];
         for (let i = 0; i < boardJson.data.length; i++) {
-            let users: Array<UserModel> = []
+            let users: Array<User> = []
             for (let j = 0; j < boardJson.data[i]["B_USERS"].length; j++) {
-                let user = new UserModel(
+                let user = new User(
                     boardJson.data[i]["B_USERS"][j] ["user_id"],
                     boardJson.data[i]["B_USERS"][j]["username"],
                     boardJson.data[i]["B_USERS"][j]["email"],
@@ -19,7 +19,7 @@ export class BoardServices {
                 users.push(user)
             }
 
-            let boardObject = new BoardModel(
+            let boardObject = new Board(
                 boardJson.data[i].B_ID,
                 boardJson.data[i].B_TITLE,
                 boardJson.data[i].B_OWNER,
@@ -31,7 +31,7 @@ export class BoardServices {
         return result;
     }
 
-    public static async createBoard(title:string, sprintLength:number): Promise<BoardModel> {
+    public static async createBoard(title:string, sprintLength:number): Promise<Board> {
         console.log(title, sprintLength)
         console.log(JSON.stringify({
             title: title,
@@ -47,7 +47,7 @@ export class BoardServices {
         });
         let boardJson = await response.json();
         console.log(boardJson)
-        return new BoardModel(
+        return new Board(
             boardJson.data.B_ID,
             boardJson.data.B_TITLE,
             boardJson.data.B_OWNER,

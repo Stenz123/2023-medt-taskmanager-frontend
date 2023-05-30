@@ -1,7 +1,7 @@
-import { UserModel } from "../models/user.model";
+import { User } from "../models/User";
 
 export class UserSubject {
-    private user:UserModel|null;
+    private user:User|null;
     private observers:Function[];
 
     private static instance:UserSubject;
@@ -19,11 +19,11 @@ export class UserSubject {
         return UserSubject.instance;
     }
 
-    public getUser():UserModel|null {
+    public getUser():User|null {
         return this.user;
     }
 
-    public setUser(user:UserModel|null):void {
+    public setUser(user:User|null):void {
         this.user = user;
         this.notifyObservers();
     }

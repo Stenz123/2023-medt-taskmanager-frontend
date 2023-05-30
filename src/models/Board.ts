@@ -1,14 +1,14 @@
-import {UserModel} from "./user.model";
+import {User} from "./User";
 
-export class BoardModel {
+export class Board {
     private _id: number;
     private _title: string;
     private _owner: number;
     private _sprintLength: number;
-    private _users: UserModel[];
+    private _users: User[];
 
 
-    constructor(id: number, title: string, owner: number, sprintLength: number, users : UserModel[]) {
+    constructor(id: number, title: string, owner: number, sprintLength: number, users : User[]) {
         this._id = id;
         this._title = title;
         this._owner = owner;
@@ -17,11 +17,11 @@ export class BoardModel {
     }
 
 
-    get users(): UserModel[] {
+    get users(): User[] {
         return this._users;
     }
 
-    set users(value: UserModel[]) {
+    set users(value: User[]) {
         this._users = value;
     }
 

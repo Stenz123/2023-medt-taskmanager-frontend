@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {BoardServices} from "../services/board.services";
-import {BoardModel} from "../models/board.model";
+import {Board} from "../models/Board";
 import CreateBoard from "../components/popup/CreateBoard";
 import ConfirmDelete from "../components/popup/ConfirmDelete";
 import {LoginService} from "../services/login.service";
@@ -11,11 +11,12 @@ import {UserSubject} from "../services/user.subject";
 
 export default () => {
 
-    const [tableItems, setTableItems] = useState([new BoardModel(-1, "noBoard", -1, -1, [])]);
+    const [tableItems, setTableItems] = useState([new Board(-1, "noBoard", -1, -1, [])]);
     const [isOpen, setOpen] = useState(false);
 
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [deleteId, setDeleteId] = useState(-1)
+    const [deleteHover, setDeleteHover] = useState(false)
 
     useEffect(() => {
         UserSubject.getInstance().subscribe(getMyBoards)
@@ -64,7 +65,6 @@ export default () => {
         <UserContext.Consumer>
 
             {({user, updateUser}) => (
-
                 user !== null ?
             <div className="max-w-screen-xl mx-auto px-4 md:px-8">
                 <button className="rounded-md px-3 pr-6 pl-6 mt-5 py-2 text-sm font-medium bg-blue-500 text-white
@@ -86,18 +86,19 @@ export default () => {
                         </thead>
                         <tbody className="text-white divide-y divide-gray-500" id="existId">
                         {
-                            tableItems.map((item: BoardModel, idx) => (
+                            tableItems.map((item: Board, idx) => (
 
                                 <tr key={idx} onClick={() => {
-                                    console.log(item.id)
-                                    //redirect to board
-                                    redirectBoard(item.id)
+                                    console.log(deleteHover)
+                                    if (!deleteHover) {
+                                        redirectBoard(item.id)
+                                    }
                                 }}
                                     className={`hover:bg-gray-500 ${idx % 2 === 0 ? "bg-gray-700" : "bg-gray-800"}`}>
                                         <td className="px-6 py-4 whitespace-nowrap">{item.title}</td>
                                         <td className="px-6 py-4 whitespace-nowrap flex items-center">{item.users.map(user => user.getName()+" ")}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{item.sprintLength}</td>
-                                        {item.owner===user.getId() ? <td className="text-red-600" onClick={function (){deleteBoard(item.id)}}>delete</td>:<td></td>}
+                                        {item.owner===user.getId() ? <td className="text-red-600" onMouseEnter={()=>{setDeleteHover(true)}} onMouseLeave={()=>{setDeleteHover(false)}} onClick={function (){deleteBoard(item.id)}}>delete</td>:<td></td>}
                                 </tr>
                             ))
                         }

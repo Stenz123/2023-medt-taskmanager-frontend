@@ -1,13 +1,13 @@
 import {UserServices} from "../../services/user.services";
-import {UserModel} from "../../models/user.model";
+import {User} from "../../models/User";
 import React, {useEffect} from "react";
 import {Props} from "@headlessui/react/dist/types";
 
-let user : UserModel;
+let user : User;
 
  export const User : React.FC<Props<any>> = ({}) => {
 
-     const [user, setUser] = React.useState<UserModel>(new UserModel());
+     const [user, setUser] = React.useState<User>(new User());
 
      useEffect(() => {
          fetchUser();
