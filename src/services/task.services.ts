@@ -20,4 +20,17 @@ export class TaskServices {
         }
         return result;
     }
+
+    public static async addTask(title:string, description:string, boardId:number): Promise<boolean> {
+        let response = await fetch("http://localhost:4000/task/createTask.php", {
+            method: "POST",
+            body: JSON.stringify({
+                title: title,
+                description: description,
+                boardId: boardId
+            })
+        });
+        let result = await response.json();
+        return result.success;
+    }
 }
