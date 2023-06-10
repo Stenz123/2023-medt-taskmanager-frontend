@@ -8,10 +8,11 @@ import {UserProvider} from "../context/userProvider";
 import {UserContext} from "../context/usercontext";
 import {Navigate, NavLink, redirect, useNavigate} from "react-router-dom";
 import {UserSubject} from "../services/user.subject";
+import {Button} from "@mui/material";
 
 export default () => {
 
-    const [tableItems, setTableItems] = useState([new Board(-1, "noBoard", -1, -1, [])]);
+    const [tableItems, setTableItems] = useState([new Board(-1, "You don't have any boards yet", -1, -1, [])]);
     const [isOpen, setOpen] = useState(false);
 
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -42,12 +43,6 @@ export default () => {
         setTableItems(response);
     }
 
-    useEffect(() => {
-        const createButton = document.getElementById('createBoard');
-        createButton?.addEventListener('click', () => {
-            setOpen(true);
-        });
-    }, [document.getElementById('createBoard')]);
 
     function deleteBoard(id: number) {
         setDeleteId(id)
@@ -71,7 +66,7 @@ export default () => {
                                    inline-flex justify-center
                                    border border-transparent shadow-sm hover:bg-blue-400
                                    focus:outline-none focus:ring-2 focus:ring-offset-2
-                                   focus:ring-blue-500 sm:w-auto sm:text-sm" id="createBoard">
+                                   focus:ring-blue-500 sm:w-auto sm:text-sm" onClick={()=>(setOpen(true))} id="createBoard">
                     New board
                 </button>
                 <div className="mt-12 shadow-sm border border-gray-500 rounded-lg overflow-x-auto">
@@ -91,13 +86,15 @@ export default () => {
                                 <tr key={idx} onClick={() => {
                                     console.log(deleteHover)
                                     if (!deleteHover) {
-                                        redirectBoard(item.id)
+                                        if (item.id !== -1) {
+                                            redirectBoard(item.id)
+                                        }
                                     }
                                 }}
                                     className={`hover:bg-gray-500 ${idx % 2 === 0 ? "bg-gray-700" : "bg-gray-800"}`}>
                                         <td className="px-6 py-4 whitespace-nowrap">{item.title}</td>
                                         <td className="px-6 py-4 whitespace-nowrap flex items-center">{item.users.map(user => user.getName()+" ")}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{item.sprintLength}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{item.sprintLength !== -1 ? item.sprintLength : ""}</td>
                                         {item.owner===user.getId() ? <td className="text-red-600" onMouseEnter={()=>{setDeleteHover(true)}} onMouseLeave={()=>{setDeleteHover(false)}} onClick={function (){deleteBoard(item.id)}}>delete</td>:<td></td>}
                                 </tr>
                             ))

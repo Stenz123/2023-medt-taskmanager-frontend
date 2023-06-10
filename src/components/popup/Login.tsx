@@ -37,6 +37,14 @@ export default function Login({open, setOpen}: Props) {
                 setError('')
                 setRegister(false)
                 setPassword('')
+
+                const response = await LoginService.login(email, password);
+                if (response) {
+                    setError('')
+                    setOpen(false);
+                } else {
+                    setError('Invalid email or password');
+                }
             } else {
                 setError('Invalid parameters');
             }
@@ -54,7 +62,7 @@ export default function Login({open, setOpen}: Props) {
     useEffect(() => {
         const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         setIsValidEmail(regex.test(email));
-    }, [email]);
+    }, [[email],[register]]);
 
     useEffect(() => {
         if (register){
@@ -62,7 +70,7 @@ export default function Login({open, setOpen}: Props) {
         }else {
             setIsValidPassword(password.length > 0);
         }
-    }, [password]);
+    }, [[password],[register]]);
 
     useEffect(() => {
         if (register){

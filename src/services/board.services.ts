@@ -61,4 +61,15 @@ export class BoardServices {
             method: "DELETE",
         })
     }
+
+    static async addUserToBoard(boardId: number, userId: String) {
+        let response = await fetch(`/api/board/addUser.php`, {
+            method: "POST",
+            body: JSON.stringify({
+                userId: userId,
+                boardId: boardId
+            })
+        })
+        return await response.json();
+    }
 }

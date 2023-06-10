@@ -1,6 +1,6 @@
 import React, {Fragment, useEffect, useState} from "react";
 import {Dialog, Transition} from "@headlessui/react";
-import {TaskServices} from "../../services/task.services";
+import {BoardServices} from "../../services/board.services";
 
 type Props = {
     open: boolean;
@@ -10,7 +10,7 @@ type Props = {
 export default function CreateBoard({open, setOpen, boardId}: Props) {
     const cancelButtonRef = React.useRef(null);
 
-    const [name, setName] = useState("");
+    const [userName, setUserName] = useState("");
     const [description, setDescription] = useState("");
 
     const [validName, setValidName] = useState(true);
@@ -20,20 +20,20 @@ export default function CreateBoard({open, setOpen, boardId}: Props) {
 
         e.preventDefault();
         if (validName) {
-            TaskServices.addTask(name,description,boardId)
+            BoardServices.addUserToBoard(Number(boardId),userName)
             setOpen(false);
         } else {
-            setError("Please enter a name for your task");
+            setError("Please enter a User");
         }
 
     };
     useEffect(() => {
-        if (name.length > 0) {
+        if (userName!=null) {
             setValidName(true);
         } else {
             setValidName(false);
         }
-    }, [name]);
+    }, [userName]);
 
 
     return (
@@ -77,32 +77,20 @@ export default function CreateBoard({open, setOpen, boardId}: Props) {
                                 transform transition-all
                                 sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                             <div className="bg-gray-700 px-4 pt-3 pb-4 sm:p-6 sm:pb-4">
-                                <p className="text-white text-lg">Create new board</p>
+                                <p className="text-white text-lg">Add Collaborator to Board</p>
                             </div>
                             <div className="bg-gray-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
 
                                 <form onSubmit={submitBoard} className="w-full flex flex-col justify-end">
                                     <div className="mb-4">
-                                        <label className="block text-white text-sm font-bold mb-2" htmlFor="email">Task name</label>
+                                        <label className="block text-white text-sm font-bold mb-2" htmlFor="email">User name</label>
                                         <input
                                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                             id="name"
                                             type="text"
-                                            placeholder="Task name"
+                                            placeholder="hansi@email.com"
                                             onChange={(e) => {
-                                                setName(e.target.value)
-                                            }}
-                                        />
-                                    </div>
-
-                                    <div className="mb-4">
-                                        <label className="block text-white text-sm font-bold mb-2">Description</label>
-                                        <textarea
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 mb-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="length"
-                                            placeholder="As a user I want to be able to..."
-                                            onChange={(e) => {
-                                                setDescription(e.target.value)
+                                                setUserName(e.target.value)
                                             }}
                                         />
                                     </div>
@@ -121,7 +109,7 @@ export default function CreateBoard({open, setOpen, boardId}: Props) {
                                         disabled:opacity-40 disabled:focus:ring-none disabled:cursor-not-allowed
                                         disabled:hover:bg-blue-500"
                                         disabled={!validName}>
-                                        Create
+                                        Add User
                                     </button>
                                 </form>
                             </div>
