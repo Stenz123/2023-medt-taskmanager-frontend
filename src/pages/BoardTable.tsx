@@ -1,14 +1,11 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {BoardServices} from "../services/board.services";
 import {Board} from "../models/Board";
 import CreateBoard from "../components/popup/CreateBoard";
 import ConfirmDelete from "../components/popup/ConfirmDelete";
-import {LoginService} from "../services/login.service";
-import {UserProvider} from "../context/userProvider";
 import {UserContext} from "../context/usercontext";
-import {Navigate, NavLink, redirect, useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {UserSubject} from "../services/user.subject";
-import {Button} from "@mui/material";
 
 export default () => {
 

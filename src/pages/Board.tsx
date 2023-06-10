@@ -47,18 +47,45 @@ export const Board = () => {
 
     async function getTasks(id:number){
         const response = await TaskServices.getTasks(id);
+        if (response !== undefined){
+            filterAndSetTasks(response)
+        }
+    }
+
+    function move(id:number, forward:boolean){
+        if (forward){
+            TaskServices.moveForward(id)
+        }else {
+            TaskServices.moveBackward(id)
+        }
+
+        let allTasks = tasks0.concat(tasks1).concat(tasks2)
+        let task = allTasks.find((task) => task.getId() === id)
+        if (task !== undefined){
+            //remove
+            allTasks = allTasks.filter((task) => task.getId() !== id)
+
+            if (task.getColumn()<2 && forward){
+                task = new Task(task.getId(), task.getTitle(), task.getDescription(), task.getColumn()+1, task.getBoardId())
+            }else if (task.getColumn()>0){
+                task = new Task(task.getId(), task.getTitle(), task.getDescription(), task.getColumn()-1, task.getBoardId())
+            }
+            allTasks.push(task)
+            filterAndSetTasks(allTasks)
+        }
+    }
+
+    function filterAndSetTasks(tasks:Task[]){
         let task0:Task[] = []
         let task1:Task[] = []
         let task2:Task[] = []
 
-        console.log(response)
-
-        response.forEach((task) => {
-            if (task.getColumn() === 0){
+        tasks.forEach((task) => {
+            if (task.getColumn() === 0) {
                 task0.push(task)
-            } else if (task.getBoardId() === 1){
+            } else if (task.getColumn() === 1) {
                 task1.push(task)
-            } else if (task.getColumn() === 2){
+            } else if (task.getColumn() === 2) {
                 task2.push(task)
             }
         })
@@ -66,10 +93,6 @@ export const Board = () => {
         setTasks0(task0)
         setTasks1(task1)
         setTasks2(task2)
-
-        console.log(tasks0)
-        console.log(tasks1)
-        console.log(tasks2)
     }
 
     return (
@@ -91,9 +114,9 @@ export const Board = () => {
                                         bottom-0 m-12 mr-32"><GroupsIcon></GroupsIcon></button>
 
             <div className="grid grid-cols-3 h-full p-5 pt-0">
-                <Column name={"not begun"} tasks={tasks0}/>
-                <Column name={"in progress"} tasks={tasks1}/>
-                <Column name={"finished"} tasks={tasks2}/>
+                <Column name={"not begun"} tasks={tasks0} move={move}/>
+                <Column name={"in progress"} tasks={tasks1} move={move}/>
+                <Column name={"finished"} tasks={tasks2} move={move}/>
             </div>
             <AddUser open={isUserOpen} setOpen={setUserOpen} boardId={myid}></AddUser>
             <CreateTask open={isOpen} setOpen={setOpen} boardId={myid}></CreateTask>

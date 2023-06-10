@@ -1,5 +1,3 @@
-import {Board} from "../models/Board";
-import {User} from "../models/User";
 import Task from "../models/Task";
 
 export class TaskServices {
@@ -28,6 +26,28 @@ export class TaskServices {
                 title: title,
                 description: description,
                 boardId: boardId
+            })
+        });
+        let result = await response.json();
+        return result.success;
+    }
+
+    public static async moveForward(taskId:number): Promise<boolean> {
+        let response = await fetch("http://localhost:4000/task/moveForward.php", {
+            method: "POST",
+            body: JSON.stringify({
+                id: taskId,
+            })
+        });
+        let result = await response.json();
+        return result.success;
+    }
+
+    public static async moveBackward(taskId:number): Promise<boolean> {
+        let response = await fetch("http://localhost:4000/task/moveBackwards.php", {
+            method: "POST",
+            body: JSON.stringify({
+                id: taskId,
             })
         });
         let result = await response.json();
