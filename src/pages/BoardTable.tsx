@@ -101,7 +101,10 @@ export default () => {
                 </div>
                 <CreateBoard open={isOpen} setOpen={setOpen}></CreateBoard>
                 <ConfirmDelete deleteId={deleteId} open={isDeleteOpen} setOpen={setIsDeleteOpen}></ConfirmDelete>
-            </div>: <><h1 className="text-white">You have to be logged in to view this page</h1><NavLink to="/"></NavLink></>
+            </div>:<div className="flex flex-col items-center min-h-screen py-2">
+                        <img className="block h-60 w-auto" src='/Logo.svg' alt="logo"/>
+                        <h1 className="text-white text-5xl pt-24 w-4/6 text-center">Create an Account or Log in to continue</h1>
+                    </div>
             )}
         </UserContext.Consumer>
     )
