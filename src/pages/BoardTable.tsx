@@ -101,9 +101,8 @@ export default () => {
                 </div>
                 <CreateBoard open={isOpen} setOpen={setOpen}></CreateBoard>
                 <ConfirmDelete deleteId={deleteId} open={isDeleteOpen} setOpen={setIsDeleteOpen}></ConfirmDelete>
-            </div>:<div className="flex flex-col items-center min-h-screen py-2">
-                        <img className="block h-60 w-auto" src='/Logo.svg' alt="logo"/>
-                        <h1 className="text-white text-5xl pt-24 w-4/6 text-center">Create an Account or Log in to continue</h1>
+            </div>:        <div className="flex flex-col items-center align-middle justify-center min-h-screen py-2 bg-gradient-to-b from-gray-900 to-gray-800">
+                        <h1 className="text-white text-5xl w-4/7 text-center mb-14">Register or Login First to Continue using TaskManager</h1>
                     </div>
             )}
         </UserContext.Consumer>
